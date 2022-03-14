@@ -7,6 +7,12 @@ from typing import Iterable, Dict, Set
 
 
 class KCP2:
+    """
+    코스피 200 은 각 섹터 안에서 등수를 지정하기 때문에
+    섹터 안에서 나누는 것 작업 수행
+        1) 섹터 안에서 나누고
+        2) 현재 섹터 안에서 Kospi200 에 이미 있는지, 아닌지를 설정함.
+    """
     __name__ = "KCP2"
     sector_encoding = {
         'Energy': 1,

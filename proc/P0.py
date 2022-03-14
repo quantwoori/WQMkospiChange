@@ -9,6 +9,16 @@ from datetime import datetime, timedelta
 
 
 class KCP0:
+    """
+    기초 정보 모으기.
+
+    현재 코스피 종목들의
+        1) 시가총액 테이블
+        2) 거래대금 테이블
+        3) 관리종목 테이블
+        4) 유통주식 테이블
+    를 리턴함.
+    """
     __name__ = 'KCP P0'
 
     def __init__(self, quarter:str):

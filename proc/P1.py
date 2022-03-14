@@ -6,6 +6,14 @@ from typing import Iterable, List
 
 
 class KCP1:
+    """
+    KOSPI 200에 포함되지 않는 종목 계산하기
+        1) 관리 감리 종목: exclude_monitoring
+        2) 유동 주식 비중이 낮은 종목: exclude_floating
+        3) exclude_age: 상장한지 얼마 되지 않은 종목
+
+    parachute 변수는 만약에 위의 종목 중 거래소가 예외지정한 종목이 있으면 마지막에 더해줌.
+    """
     __name__ = "KCP P1"
 
     def __init__(self, tval:pd.DataFrame, tvol:pd.DataFrame, mont:pd.DataFrame,

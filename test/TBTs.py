@@ -12,10 +12,10 @@ w1 = ic.change_date(2021, '2q')
 
 # TEST: Proactive
 p = Proactive()
-dfp = p.match_price(year=2021, quarter='1q')
+dfp = p.match_price(year=2021, quarter='2q')
 dfp_rtn = p.calc_return(dfp)
 
 # TEST: Reactive
 r = Reactive()
-dfr = r.match_price(year=2021, quarter='1q')
+dfr = r.match_price(year=2021, quarter='2q')
 dfr_rtn = r.calc_return(dfr)

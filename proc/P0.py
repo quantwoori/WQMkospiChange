@@ -134,7 +134,7 @@ class KCP0:
             end_date=str(recent_date),
             item=items
         )
-        d.VAL = d.VAL.astype('int64')
+        d.VAL = d.VAL.astype('float32')
         d = d.pivot_table(
             index=d.TRD_DT,
             columns=d.STK_CD
@@ -142,7 +142,15 @@ class KCP0:
         d.columns = [name for _, name in d.columns]
         return d
 
-    def main(self, date:int):
+    def main(self, date:int) -> (pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame):
+        """
+        Return
+        시가총액 테이블
+        거래대금 테이블
+        관리종목 테이블
+        유통주식 테이블
+        (Tuple 안에 데이터프레임 4개)
+        """
         d0 = self.update_time_data("시가총액")
         print(P0_MAIN_PROC0.format(self.__name__))
         d1 = self.update_time_data("거래대금")

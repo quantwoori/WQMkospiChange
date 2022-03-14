@@ -1,6 +1,7 @@
 from proc.P0 import KCP0
 from proc.P1 import KCP1
 from proc.P2 import KCP2
+from proc.P3 import KCP3
 
 # Test1 >> Process1
 p0 = KCP0('q2')
@@ -15,3 +16,5 @@ p2 = KCP2(e, f)
 g = p2.get_sector_sep()
 
 # Test4 >> Process4
+p3 = KCP3(e, f, g)
+h = p3.selection()

@@ -65,6 +65,7 @@ class KCP1:
         no0.update(no2)
         no0.update(no3)
 
+        # Filtered Candidate is given
         candidate = [stk for stk in self.TVAL.columns if stk not in no0]
         if self.PARACHUTE is not None:
             print(P1_MAIN_SUBPROC0.format(self.__name__))

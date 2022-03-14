@@ -97,11 +97,17 @@ class KCP2:
         current_k200 = self.get_current_k200()
 
         # DIVIDE {SECTOR : ([INSIDE K200], [OUTSIDE K200])}
-        print("[KCP P2] >>> DIVIDE INTO {SECTOR : ([INSIDE K200], [OUTSIDE K200])}")
+        print("[KCP P2] >>> Divide into {sector : ([inside K200], [outside K200])}")
         result = dict()
         for sector_num, sector_stk_ls in candidate.items():
             result[sector_num] = (
-                [stk for stk in sector_stk_ls if stk in current_k200],
-                [stk for stk in sector_stk_ls if stk not in current_k200]
+                [
+                    stk for stk in sector_stk_ls
+                    if stk in current_k200  # currently in kospi200
+                ],
+                [
+                    stk for stk in sector_stk_ls
+                    if stk not in current_k200  # currently --NOT-- kospi200
+                ]
             )
         return result

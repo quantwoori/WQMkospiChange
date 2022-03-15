@@ -21,9 +21,13 @@ class KCP0:
     """
     __name__ = 'KCP P0'
 
-    def __init__(self, quarter:str):
+    def __init__(self, quarter:str, designate:datetime=None, serveruse:bool=True):
         # ASSERTIONS
         assert quarter in {'q1', 'q2', 'Q1', 'Q2'}
+
+        # If NOT None -> historical testing
+        self.DESIGNATE = designate
+        self.SERVERUSE = serveruse
 
         # CLASS MODULES
         self.qt = PyQuantiwise()
@@ -36,24 +40,29 @@ class KCP0:
         # IMMUTABLE CLASS CONSTANT
         self.STARTDATE, self.ENDDATE = self.__judging_date(q=quarter)
         self.KOSPI, self.KOSPI200 = self.get_original(year=YR, month=MT)
+        print(self.STARTDATE, self.ENDDATE, YR, MT)
 
-    @staticmethod
-    def __judging_date(q:str) -> (str, str):
+    def __judging_date(self, q:str) -> (str, str):
         """
         KOSPI 200 change judging period.
         1) May 1st ~ Oct 31st
         2) Nov 1st ~ Apr 30th
         """
         y = datetime.today().year
-        if q.upper() == 'Q1':
+        if self.DESIGNATE is not None:
+            y = self.DESIGNATE.year
+
+        if q.upper() == 'Q2':
             start_date, end_date = f"{y}0501", f"{y}1031"
         else:
             start_date, end_date = f"{y - 1}1101", f"{y}0430"
         return start_date, end_date
 
-    @staticmethod
-    def __select_date() -> (int, int):
-        d = datetime.today() - timedelta(days=2)
+    def __select_date(self) -> (int, int):
+        if self.DESIGNATE is None:
+            d = datetime.today() - timedelta(days=2)
+        else:
+            d = self.DESIGNATE
         return d.year, d.month
 
     def get_original(self, year:int, month:int) -> ([Tuple], [Tuple]):
@@ -106,6 +115,24 @@ class KCP0:
             condition=condition
         )
         print(P0_UPDATE_GETIND1.format(self.__name__))
+        return d
+
+    def update_time_data_csv(self, items:str) -> pd.DataFrame:
+        print("[KCP P0] >>> KOREAN financial institute data... so dumb.. so outdated..")
+        print("[KCP P0] >>> Converting files from .CSV")
+        assert items in {'시가총액'}
+        if items == '시가총액':
+            floc = r"C:/Users/wooriam/PycharmProjects/kospiChange/proc/YUDONG.csv"
+        else:
+            raise RuntimeError("No File")
+
+        d = pd.read_csv(floc, index_col=0)
+        d.columns = [_.replace('A', '') for _ in d.columns]
+        d.index = [_.replace('-', '') for _ in d.index]
+        print('[KCP P0] >>> Check data dates manually!')
+        print("======")
+        print(f"Data Dates: {d.index[0]} from {d.index[-1]}")
+        print(f"Objective Dates {self.STARTDATE} ~ {self.ENDDATE}")
         return d
 
     def update_time_data(self, items:str) -> pd.DataFrame:

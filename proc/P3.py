@@ -123,6 +123,7 @@ class KCP3:
         """
         # 시가 총액 자료
         sector_value = self.DATA_MVAL.loc[sector_in + sector_out]
+        sector_value = sector_value.sort_values(ascending=False)
 
         # 시가 총액 순위 자료
         not_new_set = set(
@@ -165,13 +166,16 @@ class KCP3:
             count += len(selected)
 
         if count < 200:
-            self._pick200under()
+            print(f"[KCP P3] >>> Selected {count}. Call Pick200under")
+            return self._pick200under(result=selection, missing=200 - count)
 
         elif count > 200:
-            self._pick200over()
+            print(f"[KCP P3] >>> Selected {count}. Call Pick200over")
+            return self._pick200over()
 
         else:  # count == 200
-            self._pick200(result=selection)
+            print(f"[KCP P3] >>> Selected {count}. Call Pick200")
+            return self._pick200(result=selection)
 
     @staticmethod
     def _pick200(result:dict):
@@ -182,13 +186,51 @@ class KCP3:
 
         return sum(res, []), list()
 
-    def _pick200under(self):
+    def _pick200under(self, result:dict, missing:int):
         # 기존 KOSPI200종목
+        original = sum(
+            [v[0] for _, v in self.SECTOR_INFO.items()], []
+        )
 
         # 유동성 기준 만족
+        liq = list()
+        for k, v in self.SECTOR_INFO.items():
+            i, o = v
+            sector_liq = self.DATA_MVOL.loc[i + o]
+            sector_liq = sector_liq.sort_values(ascending=False)
+
+            satisfy = sector_liq[:int(np.floor(len(sector_liq) * 0.85))].index.to_list()
+            liq.append(satisfy)
+        liq = set(sum(liq, []))
 
         # 잔여종목 중 충족 현황
-        ...
+        leftout = list()
+        for sector, stocks in result.items():
+            leftout += stocks[1]
+
+        # 잔여종목 중 기존종목을 시총 순으로 줄세움
+        rule3 = [stk for stk in leftout if stk in original]
+        rule3 = self.DATA_MVAL[rule3].sort_values(ascending=False).index
+
+        fillup = list()
+        for stk in rule3:
+            if len(fillup) >= missing:
+                # 필요한 수 다채움
+                print("break")
+                break
+
+            if stk in liq:
+                # (잔여종목 중 기존종목) 중에서 유동성 기준 충족
+                fillup.append(stk)
+            else:
+                pass
+
+        # 결과물
+        r = list()
+        for sector, stocks in result.items():
+            r.append(stocks[0])
+
+        return sum(r, []) + fillup
 
     @staticmethod
     def _pick200over():

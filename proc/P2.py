@@ -40,7 +40,10 @@ class KCP2:
         10: 'Utilities',
     }
 
-    def __init__(self, kospi_tval:pd.DataFrame, kospi_tvol:pd.DataFrame):
+    def __init__(self, kospi_tval:pd.DataFrame, kospi_tvol:pd.DataFrame, designate:datetime=None):
+        # Test
+        self.DESIGNATE = designate
+
         # CLASS MODULES
         self.server = MSSQL.instance()
         self.server.login(id='wsol2', pw='wsol2')
@@ -78,7 +81,10 @@ class KCP2:
 
     def get_current_k200(self) -> Set:
         print("[KCP P2] >>> Retrieve index: KOSPI200")
-        t = datetime.today()
+        if self.DESIGNATE is not None:
+            t = self.DESIGNATE
+        else:
+            t = datetime.today()
         col = ['year', 'chg_no', 'code', 'stk_no', 'ind_']
         cnd = f"year = {t.year} and chg_no = {t.month} and ind_='ks200'"
         d = self.server.select_db(

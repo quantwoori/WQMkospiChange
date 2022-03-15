@@ -19,3 +19,5 @@ dfp_rtn = p.calc_return(dfp)
 r = Reactive()
 dfr = r.match_price(year=2021, quarter='2q')
 dfr_rtn = r.calc_return(dfr)
+
+print(dfr_rtn)

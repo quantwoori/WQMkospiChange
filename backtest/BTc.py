@@ -10,7 +10,7 @@ def stk_codes(val, prefix:str='A', std:int=6):
 
 
 # Get Tested Data
-d = pd.read_csv("../result.csv", index_col=0)
+d = pd.read_csv("../result0.csv", index_col=0)
 d = d.applymap(stk_codes)
 
 # Get Comparison Data
@@ -26,8 +26,22 @@ e = server.select_db(
 e = ['A' + info[3] for info in e]
 
 # Compare
-
+comp_in = dict()
+comp_out = dict()
 for cols in d.columns:
     new = [n for n in d[cols] if n not in e]
     out = [o for o in e if o not in d[cols].to_numpy().tolist()]
+
+    for stk in new:
+        if stk in comp_in.keys():
+            comp_in[stk] += 1
+        else:
+            comp_in[stk] = 1
+
+    for stk in out:
+        if stk in comp_out.keys():
+            comp_out[stk] += 1
+        else:
+            comp_out[stk] = 1
+
 

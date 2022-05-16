@@ -23,7 +23,6 @@ def reactive(test=True, **kwargs):
         d = datetime.today()
         dint = int(d.strftime('%Y%m%d'))
 
-
     if 'parachute' in kwargs.keys():
         pr = kwargs['parachute']
     else:
@@ -127,12 +126,12 @@ if __name__ == "__main__":
     # reactive_result = reactive(test=True, date=dt, parachute=pa)
 
     # PROACTIVE
-    dt = datetime(2022, 3, 11)
-    pa = ['373220', '402340', '373220']
+    dt = datetime(2022, 3, 18)
+    pa = ['377300', '402340', '373220']  # 제외기준 예외기업 적어놓기
     """
     '377300' : 11월 3일 상장 후 특별 편입
     '402340' : 분할상장이슈
     
     '373220' : 특별 편입
     """
-    proactive(date=dt)
+    proactive(date=dt, parachute=pa)

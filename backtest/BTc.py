@@ -10,7 +10,7 @@ def stk_codes(val, prefix:str='A', std:int=6):
 
 
 # Get Tested Data
-d = pd.read_csv("../result0.csv", index_col=0)
+d = pd.read_csv("../result13.csv", index_col=0)
 d = d.applymap(stk_codes)
 
 # Get Comparison Data
